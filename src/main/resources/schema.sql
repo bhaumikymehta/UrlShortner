@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS urlShortener;
 
-CREATE TABLE urlShortener (
+CREATE TABLE url_Shortener (
                           id INT AUTO_INCREMENT  PRIMARY KEY,
-                          long_url VARCHAR(250) NOT NULL,
-                          short_url VARCHAR(10) NOT NULL
+                          original_url VARCHAR(250) NOT NULL,
+                          short_url VARCHAR(50) NOT NULL
 );

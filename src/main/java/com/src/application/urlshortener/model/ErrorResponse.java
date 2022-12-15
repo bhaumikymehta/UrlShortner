@@ -1,4 +1,4 @@
-package com.test.UrlShortner.model;
+package com.src.application.urlshortener.model;
 
 
 import lombok.AllArgsConstructor;
