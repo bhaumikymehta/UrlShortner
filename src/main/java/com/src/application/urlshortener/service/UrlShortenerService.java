@@ -6,23 +6,13 @@ import com.src.application.urlshortener.repository.UrlShortenerRepository;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.filter.AbstractRequestLoggingFilter;
-import org.springframework.web.filter.CommonsRequestLoggingFilter;
-import org.springframework.web.util.ContentCachingRequestWrapper;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Service
 @Slf4j
-public class UrlShortenerService extends CommonsRequestLoggingFilter {
+public class UrlShortenerService {
     @Autowired
     UrlShortenerRepository urlShortenerRepository;
 
@@ -43,32 +33,19 @@ public class UrlShortenerService extends CommonsRequestLoggingFilter {
     }
 
     public String shortenURL(String url) {
-        String newURL=getAlphaNumericString(size);
-        //check if String present in H2
+          String newURL=getAlphaNumericString(size);
+         //check if String present in H2
         UrlShortenerModel byShortenedURL = urlShortenerRepository.findByShortURL(url);
-
-
-        // Testing paginated calls
-        testPaginatedCalls(url);
-
         while(byShortenedURL!=null && !byShortenedURL.getShortURL().equals(newURL)) {
              newURL=getAlphaNumericString(10);
              byShortenedURL = urlShortenerRepository.findByShortURL(url);
         }
-
         UrlShortenerModel obj=new UrlShortenerModel(newURL,url);
 
         urlShortenerRepository.save(obj);
 
         return newURL;
 
-    }
-
-    private void testPaginatedCalls(String url) {
-        PageRequest pageable=PageRequest.of(1,1, Sort.unsorted());
-        Page<UrlShortenerModel> allUsersWithPagination = urlShortenerRepository.findAllUsersWithPagination(pageable);
-
-        allUsersWithPagination.getTotalPages();
     }
 
     public ErrorResponse buildErrorResponseObject(String url) {
